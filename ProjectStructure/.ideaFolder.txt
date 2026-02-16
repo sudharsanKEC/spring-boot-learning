@@ -1,0 +1,105 @@
+spring-boot-demo -> Root directory
+
+  .idea/   ---------------------------> this folder is not part of the spring boot project, it is created by the IntelliJ IDEA, it stores the IDE specific settings not the application logic. The spring boot folder will run perfectly without this folder.
+      .gitignore
+      compiler.xml
+      encodings.xml
+      jarRepositories.xml
+      misc.xml
+      vcs.xml
+      workspace.xml
+
+Purpose of .idea
+  It saves:
+    Project configuration
+    Compiler settings
+    Encoding rules
+    Local workspace state
+    Dependency repositories
+    Developer-specific preferences
+  So next time you open the project, IntelliJ remembers everything.
+
+compiler.xml:
+  Controls:
+    Java compiler used
+    Build output paths
+    Annotation processing
+  In short:
+     How IntelliJ compiles your project.
+
+encoding.xml:
+  Defines:
+    File character encoding (UTF-8 usually)
+  Why important?
+    Without proper encoding:
+    Special characters break
+    Strings may corrupt
+  So this file says:
+    “Use UTF-8 for all files”
+
+jarRepositories.xml
+  Stores:
+    Maven repositories
+    Remote dependency sources
+    Example:
+      Maven Central
+      Local repo
+    Meaning:
+      Where IntelliJ downloads your JAR dependencies from.
+
+misc.xml
+  Miscellaneous project settings:
+    Java SDK version
+    Language level
+    Framework detection
+  Basically:
+    General project metadata.
+
+workspace.xml (MOST IMPORTANT)
+  This is 100% personal.
+  Contains:
+    Open tabs
+    Window layout
+    Breakpoints
+    Run configurations
+    Cursor positions
+  Think of it as:
+    Your IDE seating position
+  NEVER commit this to Git.
+  Each developer has their own.
+
+vcs.xml — what is it?
+  vcs.xml stands for:
+    Version Control System configuration
+    Created by IntelliJ IDEA
+  It stores:
+    Which VCS is used (usually Git)
+    Which folders are mapped to Git
+    Root repository path
+  In simple words:
+    It tells IntelliJ:
+      “This project is connected to Git, and here is the repo root.”
+  Example purpose:
+      If your project has submodules or multiple repos, IntelliJ uses vcs.xml to track them correctly.
+Important: This file will be generated only after initializing git in your project.
+
+| File                  | Purpose                   |
+| --------------------- | ------------------------- |
+| `.idea`               | IntelliJ project settings |
+| `compiler.xml`        | Compiler config           |
+| `encoding.xml`        | UTF-8 rules               |
+| `jarRepositories.xml` | Maven repos               |
+| `misc.xml`            | General project info      |
+| `workspace.xml`       | Personal IDE state        |
+| `vcs.xml`             | Git mapping               |
+| root `.gitignore`     | Project ignores           |
+| `.idea/.gitignore`    | IDE-local ignores         |
+
+
+
+
+
+
+
+
+
