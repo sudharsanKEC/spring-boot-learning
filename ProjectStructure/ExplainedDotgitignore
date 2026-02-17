@@ -1,0 +1,68 @@
+What is .gitignore file?
+    A .gitignore file is a type of file which is created before initializing git in our project.
+What is the need for the .gitignore file?
+    Whenever we are using version control system in our projects, there will be two categories of folders and files,
+      i)  A folder/file that should be tracked by git.
+      ii) A folder/file that need not to be tracked by git.
+    So in this case, we inlcude all the files and folder inside .gitignore which are need not to be tracked.
+For example, folders/files that belongs to auto-generated, machine-specific, IDE-specific, Sensitive files(password) and build outputs and also .class files are not supposed to be tracked.
+So we should include all the files and folders in this .gitignore file.
+
+Note: The .gitignore file should be created and the unnecessary untracked files should be included before initializing git in our project.
+
+Rules:
+    1) .gitignore will only affects untracked files
+        If something is already commited and tracked by vcs then just adding that file in .gitignore will not make that file ignored by vcs.
+      So, in this case you must run this command [ git rm --cached filename ] to make that commited file untracked by the git VCS.
+      Explanation of the command: git rm --cached filename
+                                  git rm means removing the file
+                                  --cached means staging area
+                                  git rm --cached filename means remove sthe file from staging are and keep it untracked always. The -- before cached means removes from git tracking but keeps file in folder(local folder).
+
+     2)Where .gitignore works
+          You can have:
+              One root .gitignore - it is global
+              Multiple nested .gitignore - it is local to that specific folder.
+          Each applies to its own folder scope.
+===============================================================================================================================================================================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
