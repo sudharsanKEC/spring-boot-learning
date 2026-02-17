@@ -26,21 +26,114 @@ Rules:
           Each applies to its own folder scope.
 ===============================================================================================================================================================================================================================================
 
+Syntax to be followed in the .gitignore file
 
+1) Ignore a single file
+            secret.txt
+        This ignores all files named secret.txt everywhere. Even if its inside folders
 
+2) Ignore a folder
+            target/
+        Ignores any folder named target anywhere
+        Eg: target/ --> ignored
+            backend/target/ --> ignored
+            frontend/target/ --> ignored
+        
+3) Ignore everything with extension
+            *.log
+        The above matches files like,
+                app.log,
+                error.log,
+                debug.log
 
+4) To ignore a specific path
+            /target
+        Only root target folder.
+        Not the target in subfolders
+        Eg:     root/target --> ignored
+                backend/target --> tracked
+        Leading / always mean root only
 
+5) To ignore a specific file inside a folder
+        .idea/workspace.xml
 
+6) To ignore all files inside folder but keep folder
+            logs/*
+        Folder exists, files ignored.
+        Git tracks only files, not folders, then why we only need to keep folders?
+            Because, you want folder structure present but runtime files need not to be commited.
+            Eg: Web apps expect logs/ to exist
+                So in this case we should keep folder but ignore contents
+        
+7) ! Negation
+            Use ! to un-ignore.
+        Eg: .idea/*
+            !.idea/compiler.xml
+        Meaning: Ignores everything in .idea
+                 Except compiler.xml
+        Used in team IntelliJ setup cases.
 
+8) Recursive wildcard
+            **/node_modules
+        Matches node_modules anywhere at any depth, like:
+            node_modules/
+            frontend/node_modules/
+            backend/api/node_modules/
+            src/app/node_modules/
+        Note: node_modules/ and **/node_modules doesn't have any practical differences.
 
+9) Comment lines
+        # this is a comment line
 
+Important Note:
+        Order matters:
+            Git reads top -> bottom
+            Later rules override earlier ones.
+        Eg:
+            *.log
+            !important.log
+        Meaning:
+            1️⃣ Ignore ALL .log
+            2️⃣ EXCEPT important.log
+        So later,
+            !important.log --> If git sees this, git decides not to ignore this file
+            important.log --> on this line git decides to ignore this file and this line wons because git follows top-bottom approach.
+            Later ones will override the earlier ones.
 
+Example for .gitignore file:
+        In java and Spring boot, most .gitignore files will have,
+                    # Build output
+                    target/
 
+                    # IntelliJ
+                    .idea/
+                    *.iml
 
+                    # Logs    
+                    *.log
 
+                    # Environment
+                    .env
 
+                    # OS    
+                    .DS_Store
+                    Thumbs.db
 
+Common mistakes:
+        Forgetting trailing slash:
+                    target
+                The above format will remove both files and folders in the project
+                So better: target/
+Security notes:
+            Never commit these files before sanitization:
+                    .env
+                    application.properties
+                    credentials.json
+            
+So what is .gitignore file?
+        .gitignore is a Git configuration file that specifies which files and directories should be excluded from version control. It’s commonly used to ignore build outputs, IDE configs, logs, and sensitive environment files. It only affects untracked files.
 
+Try using: gitignore.io
 
 
 
