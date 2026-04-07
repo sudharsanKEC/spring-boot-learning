@@ -123,7 +123,7 @@ Lets get into some Important concepts like the below:
 	Example:
 		userRepository.save(user);
 	Hibernate runs:
-		INSERT INTO user ...
+		INSERT INTO user ....
 
 3. HikariCP (Connection Pool)
 	Database connections are expensive
