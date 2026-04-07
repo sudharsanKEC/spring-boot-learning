@@ -1,0 +1,209 @@
+What is src/?
+      It is the most important folder in our project.
+      src stands for source
+      It contains:
+          Your application code
+          Configuration
+          Resources
+          Tests
+      This structure was defined by apache maven convention
+      It is called: Standard Maven Project Structure
+
+Typical Spring boot src/ structure
+        src/
+         ├── main/
+         │    ├── java/
+         │    └── resources/
+         └── test/
+              └── java/
+
+src/main/java/
+      This is where the actual java code will be coded.
+      All the java backend code related to our project will be in this folder
+      Eg: src/main/java/com/example/demo/
+      This also contains:
+              Controllers
+              Services
+              Repositories
+              Entities
+              Main Application class
+      This is compiled into .class files.
+      
+src/main/resources/
+      This contains:
+            application.properties or application.yml
+            Static files
+            Templates
+            SQL files
+            JSON configs
+      Spring Boot automatically scans this folder.
+      Eg:
+          resources folder contains:
+                application.properties
+                static/
+                templates/
+      Why seperated from java?
+          Because: Java files will be compiled 
+                   But resources will be copied as-is into final JAR
+
+src/test/java/
+      Contains:
+            Unit tests
+            Integration tests
+          Maven runs these during:
+                 mvn test
+                    or
+                 mvn install
+
+Why this structure is important?
+        Because Maven expects this exact structure.
+        If we break this structure then build may fail.
+        Maven lifecycle phases depend on:
+                                main/java
+                                test/java
+What happens internally?
+      When you run:
+            mvn package
+        Maven:
+              Compiles main/java
+              Compiles test/java
+              Runs tests
+              Packages compiled classes + resources
+              Creates JAR in target/
+        Final JAR contains:
+              Compiled classes
+              resources
+              Dependencies(if Spring Boot fat JAR)
+        
+        A simple analogy:
+              Think src/ as the raw ingredients
+              target/ is the cooked dish.
+
+
+So what is the purpose of src folder?
+          The src directory follows Maven’s standard structure. 
+          It contains application source code under src/main/java, configuration and static resources under src/main/resources, and test code under src/test/java. 
+          Maven uses this structure during the build lifecycle.
+
+Note: Every java soruce code file should be in src, always inside src/main/java.
+      Never put directly in project root. Otherwise Maven won't compile it.
+
+
+Spring Boot follows MVC(Model, View, Controller) architecture.
+1) Model represents data + business objects
+    Usually located in: src/main/java/.../entity  (or) src/main/java/.../model
+
+2) View: This is what the users sees
+    Located in: src/main/resources/templates/
+    Examples:
+        login.html
+        home.html
+    These HTML files displays model data.
+    This is your view
+
+3) Controller
+      Handles requests and connects Model + View.
+      Located in: src/main/java/.../controller
+      Eg:
+            @controller
+            public class UserController{
+            
+            }
+      Controllers:
+          Receive HTTP requests
+          Call services
+          Send model data to templates
+      This is our controller
+      
+Where does static fit?
+        static is not an MVC.
+        Its just an asset serving.
+        CSS/JS/images support the view.
+
+
+So, How does Spring Boot MVC map to project structure?
+      In Spring Boot MVC, Controllers are Java classes handling requests, Models are entity or DTO classes holding data, and Views are HTML templates placed in src/main/resources/templates. Static resources like CSS and JS are stored under src/main/resources/static.
+
+
+Important Note: 
+    Spring Boot does NOT invent its own project structure because it deliberately builds on the standard defined by Apache Maven (and Gradle).
+    Maven is the factory blueprint and Spring Boot is like the machine inside the factory.
+
+Spring Boot relies on Maven or Gradle for build management, so it follows their standard project layout. This ensures compatibility with IDEs, CI pipelines, and tooling, while Spring Boot focuses only on application behavior, not build conventions.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

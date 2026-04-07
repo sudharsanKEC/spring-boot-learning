@@ -1,0 +1,115 @@
+In this .mvn folder, there will be another folder called wrapper.
+
+We all know that maven is the build tool for spring/springboot projects.
+Maven(Fullname: Apache maven) is responsible for:
+    Downloading dependencies
+    Compiling code
+    Running tests
+    Packaging JAR/WAR
+    Managing Project life cycle
+So Maven plays two roles, 1) Java project builder and 2) Project dependency manager.
+Maven is not only for spring/springboot dependency manager.
+Maven is for entire java. Even maven is used to manage dependencies and building projects based on vannila(plain) java.
+
+So now we understood the need of maven, the spring and spring boot heavily uses maven.
+So to manage dependencies of every spring/springboot project and also to build the project, we need maven.
+
+Now, we understood the necessity of maven.
+
+So, inorder to have maven in our spring/springboot project, there are two ways to get it inside our project.
+Imagine this scenario, that our friend had cloned our fully completed spring boot project and now he want to ran it in his laptop, so in order to ran the spring boot project, he needs maven.
+To get that, two ways:
+    First:
+        He should run the command,
+            mvn clean install
+          This command sets up the maven to the project which was installed globally in his laptop.
+          So to ran this command, he should installed maven previously in his laptop globally before running this command.
+          Then maven will be set up in his project, but there is a flaw in this, because if the project you built was used another maven version, then the project might not function properly.
+          So this method is discouraged.
+    Second:
+        If he ran this command,
+            ./mvnw clean install  (or)  mvnw.cmd clean install(on windows)
+          This will starts the maven wrapper and installs the exact version that you have followed to build your project.
+          The maven-wrapper is just like a launcher or bootstrapper for setting up the maven in the project.
+          SO, once the above command is ran, then
+                i)   Maven-wrapper starts
+                ii)  Reads: .mvn/wrapper/maven-wrapper.properties
+                iii) Downloads THAT Maven version
+                iv)  Executes build using it
+          Result:
+                Same Maven version as yours
+                Same plugins
+                Same lifecycle
+                Reproducible build
+          This is the ENTIRE purpose of Maven Wrapper
+            To guarantee:
+                    “Every machine uses identical Maven.”
+              Developer
+              Friend
+              Jenkins
+              Docker
+              Production
+            All stays consistent with the exact maven version.
+            
+Difference between mvn and mvnw?
+      mvn uses the globally installed Maven, while mvnw invokes Maven Wrapper which downloads and uses the project-specific Maven version defined in maven-wrapper.properties, ensuring consistent builds across environments.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
