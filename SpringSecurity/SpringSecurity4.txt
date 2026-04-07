@@ -1,0 +1,151 @@
+Important security classes in Spring security:
+Core Configuration:
+	1) SecurityFilterChain - It defines rules and it is the entry point of the configuration
+	2) HttpSecurity - Used inside SecurityFilterChain. Configures Authorization, Login and CSRF.
+
+For Authentication: - 
+	3) UserDetailsService
+	4) UserDetails
+	5) AuthenticationManager
+	6) Authentication
+For Password:
+	7) PasswordEncoder
+For Context:
+	8) SecurityContext
+	9) SecurityContextHolder
+For Filters:
+	10) UsernamePasswordAuthenticationFilter
+	11) OncePerRequestFilter
+For Authorization:
+	12) GrantedAuthority
+
+All the above classes are provided by Spring Security.
+These are classified into three categories:
+	I) We implement it
+	II) We configure/ Use (But don't implement it)
+	III) We only use, no implementation is needed.
+
+1) We implement it:
+	These are interfaces -> We must provide logic.
+	i) UserDetailsService
+		YOU implement
+			@Service
+			public class CustomUserDetailsService implements UserDetailsService
+		Used to:
+			Load user from DB 
+	ii) UserDetails
+		YOU implement (or use default)
+			public class CustomUserDetails implements UserDetails
+		Used to:
+			Represent authenticated user
+	iii) OncePerRequestFilter (for JWT)
+		YOU extend this
+			public class JwtFilter extends OncePerRequestFilter
+		Used to:
+			Create custom filters (JWT, logging, etc.)
+
+
+2) We configure/Use (But don't implement it):
+	These are spring classes, we use them in config.
+	i) SecurityFilterChain(MOST IMPORTANT)
+		YOU define bean
+		@Bean
+		public SecurityFilterChain securityFilterChain(HttpSecurity http)
+	You configure rules here
+	
+	ii) HttpSecurity
+		Spring gives, YOU configure
+			http.authorizeHttpRequests(...)
+
+	iii) AuthenticationManager
+		Spring provides, we may configure it.
+	
+	iv) PasswordEncoder:
+		You define bean
+			@Bean
+			public PasswordEncoder passwordEncoder() {
+			    return new BCryptPasswordEncoder();
+			}
+	
+	 v) UsernamePasswordAuthenticationFilter
+		Spring provides
+		You may customize / replace
+
+3) We only use, no implementation is needed:
+	These are internal / utility classes
+	i) Authentication
+		Represents login request/result
+	Used like:
+		Authentication auth = ...
+	
+	ii) SecurityContext
+		Stores current user
+
+	iii) SecurityContextHolder
+		Access current user
+			SecurityContextHolder.getContext().getAuthentication();
+
+	iv) GrantedAuthority
+		Represents roles
+		Example:
+			ROLE_ADMIN
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,168 @@
+The some other annotations used in controller are:
+	1) @RequestParam
+	2) @RequestBody
+	3) @ResponseBody
+	4) @PathVariable	
+	5) @RequestHeader
+	6) @CookieValue(Advanced)
+
+1) @RequestParam
+	Used to get query parameters from URL
+	Example URL:
+		/users?id=10&name=Sudharsan
+	Code:
+		@GetMapping("/users")
+		public String getUser(@RequestParam int id, @RequestParam String name) {
+		    return id + " " + name;
+		}
+	Output:
+		10 Sudharsan
+	Note: The parameters id and name in the method parameter should exactly match the parameters in the URL, order doesn't matter but the name should match exactly, otherwise error.
+
+
+2. @RequestBody
+	Used to get JSON data from request body
+	Example (Postman JSON):
+	{
+	  "name": "Sudharsan",
+	  "password": "123"
+	}
+	Code:
+		@PostMapping("/users")
+		public User createUser(@RequestBody User user) {
+		    return user;
+		}
+	JSON → Java object (using Jackson)
+
+3. @ResponseBody
+	Converts Java → JSON response
+	Example:
+		@ResponseBody
+		@GetMapping("/user")
+		public User getUser() {
+		    return new User("Sudharsan");
+		}
+		Output:
+		{
+		  "name": "Sudharsan"
+		}
+	Important:
+		If using @RestController
+		You DON’T need this (already included)
+
+4. @PathVariable
+	Used to get values from URL path
+	Example URL:
+		/users/10
+	Code:
+		@GetMapping("/users/{id}")
+		public String getUser(@PathVariable int id) {
+		    return "User ID: " + id;
+		}
+	Output:
+		User ID: 10
+	Note: In @PathVariable, the name in the URL ({id}) must match the method parameter name (id) — unless you explicitly map it.
+	Explicit mapping
+		@GetMapping("/users/{id}")
+		public String getUser(@PathVariable("id") int userId) {
+		    return "User ID: " + userId;
+		}
+	Now:
+		{id} → userId
+	Works perfectly
+
+
+5. @RequestHeader
+	Used to read HTTP headers
+	Example Header:
+		Authorization: Bearer abc123
+	Code:
+		@GetMapping("/users")
+		public String getUser(@RequestHeader("Authorization") String token) {
+		    return token;
+		}
+
+6. @CookieValue (Advanced)
+	Used to read cookies from request
+	Example Cookie:
+		JSESSIONID=ABC123
+	Code:
+		@GetMapping("/users")
+		public String getUser(@CookieValue("JSESSIONID") String sessionId) {
+		    return sessionId;
+		}
+	Use Case:
+		Session management
+		Tracking user state
+
+| Annotation       | Gets Data From      | Example         |
+| ---------------- | ------------------- | --------------- |
+| `@RequestParam`  | Query params        | `?id=10`        |
+| `@PathVariable`  | URL path            | `/users/10`     |
+| `@RequestBody`   | Request body (JSON) | `{name: "x"}`   |
+| `@RequestHeader` | Headers             | `Authorization` |
+| `@CookieValue`   | Cookies             | `JSESSIONID`    |
+| `@ResponseBody`  | Sends response      | Java → JSON     |
+
+
+-----------------------------------------------------------------
+URL path → @PathVariable
+Query → @RequestParam
+Body → @RequestBody
+Header → @RequestHeader
+Cookie → @CookieValue
+Response → @ResponseBody
+
+
+Must master:
+	@RequestBody
+	@PathVariable
+	@RequestParam
+Then learn:
+	@RequestHeader
+Advanced:
+	@CookieValue
+------------------------------------------------------------------
+
+Everything combined in one example:
+@PostMapping("/users/{id}")
+public String example(@PathVariable int id, @RequestParam String role, RequestHeader("Authorization") String token, @RequestBody User user) {
+    return "OK";
+}
+
+Request:
+
+POST /users/10?role=admin
+Header: Authorization: Bearer xyz
+Body: { "name": "Sudharsan" }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

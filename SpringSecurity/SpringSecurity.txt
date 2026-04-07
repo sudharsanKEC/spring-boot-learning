@@ -1,0 +1,242 @@
+Types of attacks that might used on application and users:
+	1) Authentication and Authorization attacks
+	2) CSRF - Cross Site Request Forgery
+	3) Session Fixation
+	4) Clickjacking
+	5) Password attacks
+	6) CORS issues
+Spring security mainly provides protection for the above attacks
+Some other common attacks that we(developers) must know:
+	7) SQL Injection
+	8) XSS - Cross Site Scripting
+	9) CSRF
+	10) Broken Authentication
+	11) Broken Access Control
+	12) Sensitive Data exposure
+	13) Security misconfiguration
+	14) Insecure Deserialization
+	15) File upload vulnerabilities
+	16) DoS(Denial of Service)
+
+
+1) Authentication and Authorization attacks:
+	In Spring Security (and any system):
+		Authentication = Who are you?
+		Authorization = What are you allowed to do?
+	In Authentication:
+		They use brute force to crack your passwords.
+		Phising: They create a fake login page for websites and if you enter your real credentials there, then they will steal it and use those in the real website.
+		Session Hijacking: Attacker steals session ID and uses it to act as user.
+		To prevent these types of attacks:
+			Strong passwords
+			Password hashing (BCrypt)
+			Rate limiting (limit login attempts)
+			HTTPS (protect data)
+			Multi-factor authentication (OTP)
+	In Authorization:
+		Usually, in authorization attacks, the attacker tries to do something that they are not allowed to do, for example a normal user trying to use admin specific features.
+		Vertical Privilege Escalation: Normal user tries to become admin.
+		Horizontal Privilege Escalation: A user tries to access another user's data
+		Direct URL access -> No Security check. /admin/panel -> If not protected -> anyone can access
+		To prevent this:
+			Implement Role based access control
+			Validate user ownership
+			Secure endpoints
+			Never trust client input
+
+2) CSRF - Cross Site Request Forgery
+	It tricks a logged-in user into performing an action without their consent.
+	User is authenticated, attacker abuses that trust.
+	Lets see an example of how it works:
+		Assume that a user logs into his bank website in a browser.
+		User logged into bank.com
+		And the server creates a cookies session ID for the user logged into bank website.
+		And then if the user mistakenly or unknowingly opened a malicious site like evil.com, and from there they will written the code for sending a request for the bank server. And here, as the request was sent to the bank server, browser automatically adds the user's existing session id along with it. And because of this the server thinks that the request was legal.
+And the request might contains transacting money from the user account to the hacker's account. 
+Then the users money in his bank account will be lost.
+		So to prevent this, when the user logs into the bank account and session id was created, and the server also creates a token and give it to the user side. And whenever the user sends request again the csrf token will be included, so if a malicious site sends such type of requests without csrf tokens then it will be rejected by server.
+		And that's how CSRF attacks are prevented.		
+
+
+3) Session Fixation:
+	Session Fixation is an attack where the attacker forces a user to use a known session ID, and then hijacks the session after the user logs in.
+	Lets see an example of how this attack works:
+		An attacker visits a bank website and the server creates a session id for him.
+		Lets say the sessionID = ABC123
+		Then attacker sends this session to victim using malicious link, email or Hidden iframe.
+		Eg: http://bank.com?JSESSIONID=ABC123
+		And if the victim opens that link with the same session and if he logs in, in his browser and then the same sessionID will be applied to him.
+		As the victim logged in using his credentials, then the server thinks that the user in the sessionID has logged in, so now the attacker with the same sessionID gets access to the user's bank account even without login. Because once the server recognises that the sessionID is logged in then it will let the user in even without entering password and the same applies to the hacker.
+		So to prevent this,
+			If we change the sessionID of the user after logging in, then the attacker can't do anything with the old sessionID.
+			Eg: 
+				Old sessionID = ABC123
+				New SessionID = XYZ789
+			Now the attacker's session becomes useless.
+		Session Fixation is an attack where an attacker sets a known session ID for a victim before login and then uses the same session after the victim authenticates.
+		It happens when the server does not regenerate a new session ID after login.
+| Event                    | Session ID changes?           |
+| ------------------------ | ----------------------------- |
+| First visit (no session) | ✅ Created                     |
+| While browsing           | ❌ Same session                |
+| After login              | ✅ **Regenerated (important)** |
+| After logout             | ❌ Session invalidated         |
+| New login again          | ✅ New session                 |
+
+
+4) ClickJacking:
+	It is the process of tricking the user to believe that he was click something else but actually it was something malicious.
+	For example, if there was a button: Win iPhone Ultra Pro max, but actually that button was embedded with some other sites like: https://bank.com/moneyTransfer. 
+	Then that will let the user there. So this can be used for stealing money from the user.
+	So to prevent this we should make our spring app non embeddable in other iframes.
+	Spring Security can make your application non-embeddable inside iframes
+	It does this by sending special HTTP security headers
+
+5) Password attacks:
+	Attacker tries to hack the password, using:
+		i) Brute force attacks - Try every possible combination until it works, to prevent this we can fix some N number of tries per day.
+		ii) Dictionary attack - Try common words or leaked passwords instead of all combinations, prevented by strong password policies and using salted hashing.
+		iii) Credential stuffing - Use passwords leaked from other sites, Prevented by: MFA (Multi-Factor Authentication), Monitoring login anomalies
+		iv) Rainbow table attack - Uses precomputed hash tables to reverse passwords from hashes, Prevented by: Salted hashes (random value added before hashing)
+		v) Keylogger/Phising - Attacker tricks user into giving password, Prevented by: HTTPS, Awareness, MFA
+
+6) CORS issues:
+	CORS (Cross-Origin Resource Sharing) is a browser security mechanism that restricts web pages from making requests to a different domain than the one that served the web page.
+	Browsers implement same-origin policy:
+		A page from domainA.com cannot make requests to domainB.com unless domainB.com explicitly allows it.
+	Why it exists
+		Prevents malicious websites from stealing data from other websites via JavaScript.
+		Example: evil.com trying to read your bank data from bank.com.
+	Example Scenario
+		Step 1: Your frontend (React/JS) runs on:
+			http://localhost:3000
+		Step 2: Your backend (Spring Boot) API runs on:
+			http://localhost:8080
+		Step 3: Frontend tries to fetch API
+			fetch("http://localhost:8080/api/users")
+			  .then(res => res.json())
+			  .then(data => console.log(data));
+		Step 4: Browser blocks it
+			Error in console:
+				Access to fetch at 'http://localhost:8080/api/users' from origin 'http://localhost:3000' 
+				has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+		What happened?
+			Browser sees cross-origin request: 3000 → 8080
+			Spring Boot didn’t allow it, so request blocked by browser
+			This is not server error, it’s client/browser enforcement
+	CORS issue occurs when a frontend tries to access a backend API on a different origin without the backend explicitly allowing it. The browser blocks the request unless the backend sends proper Access-Control-Allow-Origin headers.
+	CORS = browser saying no to cross-site API requests unless server says OK.
+
+	
+
+| # | Attack Type                                                         | How It Works                                                                          | Spring Security Protection                                                                                                                                                                                                                                                            |
+| - | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1 | **Authentication & Authorization attacks**                          | Attacker tries to bypass login, escalate privileges, or access unauthorized endpoints | - Enforces **authentication** (login, password checks) <br> - **Role-based access control** with `@PreAuthorize`, `@Secured`, or HTTP config <br> - **Method-level security** <br> - Default password encoding (`BCryptPasswordEncoder`) <br> - Session management & account lockouts |
+| 2 | **CSRF (Cross-Site Request Forgery)**                               | Attacker tricks logged-in user to send requests unknowingly                           | - Automatically enables **CSRF protection** for state-changing requests (POST, PUT, DELETE) <br> - Uses **CSRF tokens** `<input type="hidden" name="_csrf">` <br> - Verifies token on every request <br> - Prevents unauthorized state changes                                        |
+| 3 | **Session Fixation**                                                | Attacker sets session ID before login, then hijacks session after login               | - Default **session fixation protection**: `sessionFixation().migrateSession()` <br> - Creates a **new session ID after login** <br> - Invalidates old session automatically                                                                                                          |
+| 4 | **Clickjacking**                                                    | Attacker embeds your site in a hidden iframe to trick user clicks                     | - Adds HTTP header: `X-Frame-Options: DENY` (or SAMEORIGIN) <br> - Can also use modern `Content-Security-Policy: frame-ancestors 'none';` <br> - Blocks your app from being embedded on other sites                                                                                   |
+| 5 | **Password attacks** (brute force, dictionary, credential stuffing) | Attacker tries to guess or reuse passwords                                            | - Uses **hashed & salted passwords** (`BCryptPasswordEncoder`) <br> - Can configure **account lockout**, **rate-limiting**, **CAPTCHA** after failed attempts <br> - Supports **multi-factor authentication (MFA)** integration                                                       |
+| 6 | **CORS issues**                                                     | Browser restricts cross-origin requests; can cause frontend errors                    | - Spring Security allows **CORS configuration**: `<@CrossOrigin>` or `WebMvcConfigurer` <br> - Controls allowed origins, methods, headers <br> - Ensures legitimate cross-origin requests work safely                                                                                 |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

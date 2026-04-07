@@ -1,0 +1,113 @@
+@RequestMapping:
+	This method is mainly used for giving prefixes for endpoints in a class.
+	Eg:
+		@RequestMapping("api/")
+		public class UserController{...}
+	Now all the endpoints in the class will be accessed with the prefix api/, for example api/getUsers, api/createUser
+	
+	And also all the other annotations like @GetMapping,@PostMapping, @DeleteMapping, @PutMapping are derived or shortcuts for the @RequestMapping.
+	Before these shortcuts we have directly used the @RequestMapping like @RequestMapping(value = "/users", method = RequestMethod.GET) --> Now the class will receive only GET requests.
+	But it is verbose and prone to make mistakes.
+	So to overcome this shortcuts like @GetMapping,@PostMapping, @DeleteMapping, @PutMapping are created.
+
+@RequestMapping is the base annotation for mapping HTTP requests.
+In modern Spring Boot, it is commonly used at class level for prefixes, while specialized annotations like @GetMapping are used at method level.
+
+
+The shortcut methods of @RequestMapping are listed as follows:
+
+1) @GetMapping
+	@GetMapping("/users")
+	Used for:
+		Fetching data(READ)
+	Example:
+		Get all users
+		Get user by ID
+
+2) @PostMapping
+	@PostMapping("/users")
+	Used for:
+		Creating new data
+	Example:
+		Register user
+		Create order
+3) @PutMapping
+	@PutMapping("/users/{id}")
+	Used for:
+		Updating entire resource
+	Example:
+		Update full user details
+
+4) @PatchMapping
+	@PatchMapping("/users/{id}")
+	Used for:
+		Partial update
+	Example:
+		Update only email/password
+
+5) @DeleteMapping
+	@DeleteMapping("/users/{id}")
+	Used for:
+		Deleting data
+	Example:
+		Delete user
+
+Frequently Used Ones (MOST IMPORTANT)
+	In real projects, you’ll mostly use:
+	Must know:
+		@GetMapping
+		@PostMapping
+		@PutMapping
+		@DeleteMapping
+Less frequently used (but important):
+	@PatchMapping
+	Used when:
+		You want partial updates (not full object)
+
+| Operation        | Annotation       | Example       |
+| ---------------- | ---------------- | ------------- |
+| Read             | `@GetMapping`    | `/users`      |
+| Create           | `@PostMapping`   | `/users`      |
+| Update (full)    | `@PutMapping`    | `/users/{id}` |
+| Update (partial) | `@PatchMapping`  | `/users/{id}` |
+| Delete           | `@DeleteMapping` | `/users/{id}` |
+
+
+Behind the Scenes:
+	@GetMapping("/users")
+	is actually:
+		@RequestMapping(value = "/users", method = RequestMethod.GET)
+
+Best Practice:
+	@RestController
+	@RequestMapping("/api/users")
+	public class UserController {
+
+	    @Getapping
+	    public List<User> getAllUsers() {}
+	
+	    @PostMapping
+	    public User createUser() {}
+	
+	    @PutMapping("/{id}")
+	    public User updateUser() {}
+
+	    @DeleteMapping("/{id}")
+	    public void deleteUser() {}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

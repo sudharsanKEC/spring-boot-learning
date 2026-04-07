@@ -1,0 +1,116 @@
+Spring Security doesn't sit inside Controller, Service, Repository, or Entity.
+Instead: It sits BEFORE all of them and controls access to them
+
+Big Picture Again (Refined)
+	Client Request
+	   ↓
+	Spring Security Filters 🔐
+	   ↓
+	(If allowed)
+	   ↓
+	Controller → Service → Repository → DB
+So:
+	Security is like a gatekeeper
+	Your layers are inside the gate
+
+How does Spring Security affects each layer or whats the impact of spring security on each layer?
+1. Controller Level
+	Primary place where security is applied
+	How?
+	URL-based security
+		http.authorizeHttpRequests(auth -> auth
+		    .requestMatchers("/admin/**").hasRole("ADMIN")
+		    .requestMatchers("/users/**").authenticated()
+		);
+	Method-level security (VERY IMPORTANT)
+		@PreAuthorize("hasRole('ADMIN')")
+		@GetMapping("/delete")
+		public void deleteUser() {}
+	This is where:
+		Most access control happens
+
+2. Service Layer
+	Security can also be applied here
+	Example:
+		@PreAuthorize("hasRole('ADMIN')")
+		public void deleteUser() {}
+	Why use here?
+		Even if someone bypasses controller (rare)
+		Service still enforces rules
+	Best practice:
+		Critical business logic → secure at service level
+
+3. Repository Layer
+	Spring Security does NOT directly secure repositories
+	But indirectly:
+		Only authenticated requests reach repository
+	You can use:
+		Query-level filtering
+		Custom logic based on user
+	Example:
+		findByUserId(currentUserId)
+	Security is enforced BEFORE reaching here
+
+4. Entity Layer
+	No direct security
+	Entities are:
+		Just data models
+	But used in:
+		Authentication (User entity)
+		Role management
+
+
+| Layer      | Security Applied? | How               |
+| ---------- | ----------------- | ----------------- |
+| Controller | ✅ Yes             | URL + annotations |
+| Service    | ✅ Yes             | Method security   |
+| Repository | ⚠️ Indirect       | Filtered access   |
+| Entity     | ❌ No              | Just data         |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

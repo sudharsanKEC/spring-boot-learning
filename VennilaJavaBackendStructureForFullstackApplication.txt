@@ -1,0 +1,309 @@
+Step 1: Create the Project Folder
+		Decide on your project name, e.g., fullstack-backend-java.
+		fullstack-backend-java/
+		
+		Inside the folder, we’ll follow Maven conventions.
+		Maven conventions are the standard folder structure for java based projects.
+
+Step 2: Set up Standard Maven Structure
+	Create the following folder hierarchy:
+
+fullstack-backend-java/
+│
+├── pom.xml
+└── src
+    ├── main
+    │   ├── java
+    │   │   └── com
+    │   │       └── example
+    │   │           └── backend
+    │   │               └── App.java
+    │   └── resources
+    │       └── config.properties
+    │
+    └── test
+        └── java
+            └── com
+                └── example
+                    └── backend
+                        └── AppTest.java
+
+
+Notes:
+	src/main/java → all backend Java code
+	src/main/resources → config files, properties, SQL scripts, etc.
+	src/test/java → unit tests
+	pom.xml → Maven config, even if just vanilla Java
+
+Step 3: Create the pom.xml
+	Even for vanilla Java, it’s good to have a Maven setup:
+	✅ Notes:
+		Set your Java version according to your setup (17 is common for modern apps)
+		JUnit dependency is optional but useful for testing
+		This minimal setup lets you compile and run Java code via Maven
+	Refer POM.xml.txt for learning about this folder more.
+
+
+Step 4: Create Main Java Class
+	File: src/main/java/com/example/backend/App.java
+
+	package com.example.backend;
+	public class App {
+	    public static void main(String[] args) {
+        	System.out.println("Hello Fullstack Backend Java!");
+	    }
+	}
+	✅ Notes:
+		Use a package structure that mirrors company/project conventions
+		Helps avoid class name conflicts and is required for Maven
+
+
+
+Step 5: Create a Test Class
+	File: src/test/java/com/example/backend/AppTest.java
+
+	package com.example.backend;
+	import org.junit.jupiter.api.Test;
+	import static org.junit.jupiter.api.Assertions.assertTrue;
+	public class AppTest {
+	    @Test
+	    void sampleTest() {
+        	assertTrue(true, "This test should always pass");
+    	    }
+	}
+	✅ Notes:
+		Keep unit tests separated in src/test/java
+		Use JUnit 5 (or your preferred testing framework)
+
+Now we should install maven:
+Goto: https://maven.apache.org/download.cgi
+
+Click 	apache-maven-3.9.13-bin.zip in  link column of the table Apache Maven 3.9.13
+
+After the zip file has been downloaded extract it in any folder, i have extracted it in the E:\DevTools
+After extracting it:
+
+Step 1: Open Environment Variables
+    1) Press Win + S → type: Environment Variables → click “Edit the system environment variables”.
+    2) In the System Properties window, click Environment Variables.
+
+Step 2: Add Maven to PATH
+    1) Under System variables, scroll to Path → select it → click Edit → click New.
+    2) Add the path to Maven’s bin folder:
+        E:\DevTools\apache-maven-3.9.13\bin
+    3) Click OK on all dialogs to save.
+
+Step 3: Verify Installation
+    Open a new PowerShell or Command Prompt (important — must be a new window).
+    Run:
+        mvn -version
+    Expected output:
+        Apache Maven 3.9.5 (or 3.9.13 if you downloaded that)
+        Maven home: D:\DevTools\apache-maven-3.9.5
+        Java version: 21, vendor: Amazon.com Inc.
+        Java home: ...
+    ✅ Notes:
+        If this works, Maven is now globally available.
+        You can now compile and run any Maven Java project, including Spring and Spring Boot projects.
+
+Now the setup has been completed
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+Now running the application:
+    Let’s compile and run our vanilla Java project using Maven, step by step.
+        Step 1: Open Terminal
+            1) Open a new PowerShell or CMD window.
+            2) Navigate to your project folder:
+        cd E:\fullstack-backend-java
+
+        Step 2: Compile the Project
+            Run:
+                mvn compile
+            What happens:
+                Maven reads your pom.xml.
+                Compiles all .java files in src/main/java.
+                Outputs compiled .class files in target/classes.
+            ✅ If successful, you’ll see something like:
+                [INFO] --- maven-compiler-plugin:3.11.0:compile (default-compile) @ fullstack-backend-java ---
+                [INFO] Changes detected - recompiling the module!
+                [INFO] Compiling 1 source file to E:\fullstack-backend-java\target\classes
+                [INFO] ------------------------------------------------------------------------
+                [INFO] BUILD SUCCESS
+                [INFO] ------------------------------------------------------------------------
+
+        Step 3: Run the Project
+            Run your main class:
+                java -cp target/classes com.example.backend.App
+            
+            Expected output:
+                Hello Fullstack Backend Java!
+            ✅ Notes:
+                -cp target/classes tells Java where to find compiled classes.
+                com.example.backend.App = fully qualified class name (package + class).
+
+        Step 4: Run Unit Tests
+            Since you added JUnit, run:
+                mvn test
+            Maven runs tests in src/test/java using Surefire plugin.
+            You should see:
+                [INFO] BUILD SUCCESS
+            Once this works, your vanilla Java project with Maven and Java 21 is fully functional.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    1️⃣Purpose of Unit Tests
+            Unit Test: small test that checks a single part of your code (like a method or class) works as expected.
+            Example: AppTest.java with JUnit checks that your methods don’t break.
+        Why needed:
+            Catch bugs early → before deploying or integrating.
+            Verify code changes → ensures new changes don’t break old functionality (regression).
+            Documentation → tests serve as examples of how code should behave.
+        In Maven, mvn test runs all your unit tests automatically using the testing framework (JUnit).
+
+    2️⃣ Need for mvn compile
+            Compiles all .java files in src/main/java.
+            Converts human-readable Java code → bytecode (.class) that JVM can run.
+            Outputs go to target/classes.
+        Without compiling: Java cannot run your code because JVM needs .class files.
+
+    3️⃣ Why there is no mvn run
+            Maven doesn’t have a generic run command.
+            Maven is primarily a build tool, not a runtime like Node.js.
+            To run your program, you either:
+                1) Use Java directly:
+                    java -cp target/classes com.example.backend.App
+                2) Or use the Maven Exec plugin if you want mvn exec:java:
+                        <!-- Add in pom.xml -->
+                        <build>
+                            <plugins>
+                                <plugin>
+                                    <groupId>org.codehaus.mojo</groupId>
+                                    <artifactId>exec-maven-plugin</artifactId>
+                                    <version>3.1.0</version>
+                                    <configuration>
+                                        <mainClass>com.example.backend.App</mainClass>
+                                    </configuration>
+                                </plugin>
+                            </plugins>
+                        </build>
+                    Then run:
+                        mvn exec:java
+                    This effectively runs your main class via Maven.
+
+    4️⃣ What is “building” in Maven?
+            Build = all steps required to turn your source code into a runnable artifact (like .class files or a .jar).
+            Typical Maven build lifecycle:
+                | Phase          | What it does                              |
+                | -------------- | ----------------------------------------- |
+                | `validate`     | Check if project structure is correct     |
+                | `compile`      | Compile source code (`src/main/java`)     |
+                | `test-compile` | Compile test code (`src/test/java`)       |
+                | `test`         | Run unit tests                            |
+                | `package`      | Package compiled code into a **JAR/WAR**  |
+                | `install`      | Install JAR into local Maven repo (`.m2`) |
+                | `deploy`       | Upload to remote repository (optional)    |
+            Official documentation:
+                A Build Lifecycle is Made Up of Phases
+                    Each of these build lifecycles is defined by a different list of build phases, wherein a build phase represents a stage in the lifecycle.
+
+                    For example, the default lifecycle comprises of the following phases (for a complete list of the lifecycle phases, refer to the Lifecycle Reference):
+
+                        validate - validate the project is correct and all necessary information is available
+                        compile - compile the source code of the project
+                        test - test the compiled source code using a suitable unit testing framework. These tests should not require the code be packaged or deployed
+                        package - take the compiled code and package it in its distributable format, such as a JAR.
+                        verify - run any checks on results of integration tests to ensure quality criteria are met
+                        install - install the package into the local repository, for use as a dependency in other projects locally
+                        deploy - done in the build environment, copies the final package to the remote repository for sharing with other developers and projects.
+                    These lifecycle phases (plus the other lifecycle phases not shown here) are executed sequentially to complete the default lifecycle. Given the lifecycle phases above, this means that when the default lifecycle is used, Maven will first validate the project, then will try to compile the sources, run those against the tests, package the binaries (e.g. jar), run integration tests against that package, verify the integration tests, install the verified package to the local repository, then deploy the installed package to a remote repository.
+            So building means: compile → test → package → install (depending on which phase you run).
+
+    5️⃣ Other essential Maven commands
+            | Command               | Purpose                                                              |
+            | --------------------- | -------------------------------------------------------------------- |
+            | `mvn compile`         | Compile main Java code                                               |
+            | `mvn test-compile`    | Compile test classes                                                 |
+            | `mvn test`            | Run unit tests                                                       |
+            | `mvn package`         | Package compiled code into JAR/WAR in `target/`                      |
+            | `mvn install`         | Install artifact in **local repo** (`~/.m2`) for reuse               |
+            | `mvn clean`           | Delete `target/` folder → clean build                                |
+            | `mvn validate`        | Check project structure                                              |
+            | `mvn verify`          | Run any checks on the project (like code quality, integration tests) |
+            | `mvn dependency:tree` | View dependency hierarchy and conflicts                              |
+            | `mvn exec:java`       | Run your main class (if Exec plugin configured)                      |
+
+✅ Notes:
+    Maven commands are phases in a lifecycle. Each command may trigger all prior phases automatically.
+        Example: mvn package → runs validate, compile, test, then package.
+
+About this command:
+    java -cp target/classes com.example.backend.App
+    1️⃣ java
+        This is the Java runtime command.
+        It tells the computer: “Run this Java program using the JVM.”
+
+    2️⃣ -cp
+        -cp stands for classpath.
+            Classpath tells Java where to look for compiled .class files and libraries.
+            Here:
+                target/classes
+            This is the folder where Maven puts compiled classes.
+            So Java knows: “Look here for the classes needed to run com.example.backend.App.”
+        ✅ Example:
+            Your App.java is compiled into App.class in target/classes/com/example/backend/App.class.
+            Without -cp target/classes, Java wouldn’t know where App.class is.
+
+    3️⃣ com.example.backend.App
+            This is the fully qualified class name:
+                com.example.backend = package
+                App = class name
+            Java needs the package + class to locate the main class with public static void main(String[] args)
+
+    Putting it all together
+            java -cp target/classes com.example.backend.App
+        JVM = java
+        Look in target/classes for classes = -cp target/classes
+        Run class App in package com.example.backend = com.example.backend.App
+    Output:
+        Hello Fullstack Backend Java!
+
+Is -cp optional?
+    Yes, but only if run on the correct path 
+    Eg:
+        PS E:\fullstack-backend-java\target\classes> java com.example.backend.App
+        Hello Fullstack Backend Java!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,115 @@
+Some important annotations that we use in controllers are listed here, they are:
+@RestController
+@RequestMapping
+@GetMapping
+@AutoWired
+@PostMapping
+@RequestBody
+@PathVariable
+@PutMapping
+@DeleteMapping
+And other important annotations needed for controller classes also explained here.
+
+1) What is @RestController:
+	@RestController
+	public class UserController {
+	}
+	It tells Spring:
+		“This class will handle HTTP requests AND return data directly (JSON/XML), not views.”
+	Internally,
+		@RestController = @Controller + @ResponseBody
+
+	@Controller: This is used in old MVC style applications
+		     Marks class as web controller, used for Spring MVC (HTML pages)
+		     Eg:
+			@Controller
+			public class UserController {
+				@GetMapping("/home")
+				public String home() {
+				    return "index";  // refers to HTML page
+				    // This returns: Not data, a view(HTML page)
+				}
+			}	
+	--------------------------------------------------------------------------------
+	@ResponseBody
+	public User getUser() {
+	    return user;
+	}
+	Purpose:
+		Converts Java object → JSON
+		Sends it in HTTP response
+	Uses Jackson(Collection of packages and classes, its a library for JSON<->Java objects) internally
+
+	----------------------------------------------------------------------------------
+	Problem Before @RestController
+		Earlier, we had to write:
+		@Controller
+		public class UserController {
+		
+		    @ResponseBody
+		    @GetMapping("/user")
+		    public User getUser() {
+		        return user;
+		    }
+		}
+	Problem:
+		You had to add @ResponseBody on EVERY method
+		Easy to forget
+		Boilerplate code
+	
+	Solution: @RestController
+		@RestController
+		public class UserController {
+		    @GetMapping("/user")
+		    public User getUser() {
+		        return user;
+		    }
+		}
+	Spring automatically:
+		Treats ALL methods as @ResponseBody
+	Why Combine Them?
+		Clean code
+			No need to repeat @ResponseBody
+		REST-focused design
+			Modern apps → APIs, not HTML
+		Less error-prone
+			You won’t forget annotations
+	Can we use them separately?
+		YES, but not recommended for APIs
+
+	@RestController helps us create REST APIs”
+		Absolutely TRUE
+		Because:
+			It returns JSON by default
+			Works perfectly with HTTP methods (GET, POST, etc.)
+			Used with Postman / frontend apps
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
